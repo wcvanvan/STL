@@ -3,15 +3,15 @@
 #define B(i, j) B[(i)*N + (j)]
 #define C(i, j) C[(i)*N + (j)]
 
-void gemm_4x4(float *&A, float *&B, float *&C, int M, int N, int K);
-void addDot_4x4(float *&A, float *&B, float *&C, int M, int N, int K);
+void gemm_4x4(float *A, float *B, float *C, int M, int N, int K);
+void addDot_4x4(float *A, float *B, float *C, int M, int N, int K);
 /*
 pass matrices in the form of 1d array using reference
 M: rows of C, rows of A
 N: columns of C, columns of B
 K: columns of A, rows of B
 */
-void gemm_4x4(const float const *&A, float *&B, float *&C, int M, int N, int K) {
+void gemm_4x4(float *A, float *B, float *C, int M, int N, int K) {
   int bigBlockCountInRow = M / 16;
   for (int z = 0; z < pow(bigBlockCountInRow, 2); z++) {
     int newI = z / bigBlockCountInRow * 16;

@@ -1,35 +1,44 @@
+template <typename T>
 class Stack {
  private:
   int max_size;
-  char *array;
+  T *array;
   int top;
 
  public:
-  Stack(int max_size);
+  Stack(int _max_size);
   ~Stack();
-  bool push(char c);
+  bool push(T element);
   bool pop();
-  char peek();
+  T peek();
   bool isEmpty();
   void clear();
 };
 
-Stack::Stack(int max_size) {
-  this->max_size = max_size;
-  array = new char[max_size];
+template <typename T>
+Stack<T>::Stack(int _max_size) {
+  top = -1;
+  max_size = _max_size;
+  array = new T[max_size];
 }
 
-Stack::~Stack() { delete[] array; }
+template <typename T>
+Stack<T>::~Stack() {
+  delete[] array;
+}
 
-bool Stack::push(char c) {
+template <typename T>
+bool Stack<T>::push(T element) {
   if (top == max_size - 1) {
     return false;
   } else {
-    array[++top] = c;
+    array[++top] = element;
     return true;
   }
 }
-bool Stack::pop() {
+
+template <typename T>
+bool Stack<T>::pop() {
   if (top == -1) {
     return false;
   } else {
@@ -37,18 +46,22 @@ bool Stack::pop() {
     return true;
   }
 }
-char Stack::peek() {
-  if (top == -1) {
-    return 0;
-  } else {
-    return array[top];
-  }
+
+template <typename T>
+T Stack<T>::peek() {
+  return array[top];
 }
-bool Stack::isEmpty() {
+
+template <typename T>
+bool Stack<T>::isEmpty() {
   if (top == -1) {
     return true;
   } else {
     return false;
   }
 }
-void Stack::clear() { top = -1; }
+
+template <typename T>
+void Stack<T>::clear() {
+  top = -1;
+}

@@ -1,42 +1,47 @@
+template <typename T>
 class Queue {
  private:
   int max_size;
   int real_size;
-  char *array;
+  T *array;
   int front, rear;
 
  public:
   Queue(int max_size);
   ~Queue();
-  bool enqueue(char c);
+  bool enqueue(T element);
   bool dequeue();
-  char peek();
+  T peek();
   bool isEmpty();
   bool isFull();
 };
 
-Queue::Queue(int max_size) {
-  this->max_size = max_size;
+template <typename T>
+Queue<T>::Queue(int _max_size) {
+  max_size = _max_size;
   real_size = max_size + 1;
-  array = new char[real_size];
+  array = new T[real_size];
   front = rear = 0;
 }
 
-Queue::~Queue() { delete[] array; }
+template <typename T>
+Queue<T>::~Queue() {
+  delete[] array;
+}
 
-bool Queue::enqueue(char c) {
+template <typename T>
+bool Queue<T>::enqueue(T element) {
   if (!isFull()) {
-    array[rear++] = c;
-    if (rear == real_size) {
-      rear %= real_size;
-    }
+    array[rear++] = element;
+    rear %= real_size;
     return true;
   } else {
     return false;
   }
 }
 
-bool Queue::dequeue() {
+template <typename T>
+bool Queue<T>::dequeue() {
   if (!isEmpty()) {
     front++;
     front %= real_size;
@@ -46,22 +51,21 @@ bool Queue::dequeue() {
   }
 }
 
-char Queue::peek() {
-  if (!isEmpty()) {
-    return array[front];
-  } else {
-    return 0;
-  }
+template <typename T>
+T Queue<T>::peek() {
+  return array[front];
 }
 
-bool Queue::isEmpty() {
+template <typename T>
+bool Queue<T>::isEmpty() {
   if (front == rear) {
     return true;
   }
   return false;
 }
 
-bool Queue::isFull() {
+template <typename T>
+bool Queue<T>::isFull() {
   if (((rear + 1) % real_size) == front) {
     return true;
   }
