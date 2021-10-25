@@ -1,11 +1,27 @@
-# Introduction
+# Introduction #
 This repository contains some libraries written in C++
 
 including:
 
-array-based stack
+## Data Structures: ## 
 
-array-based queue
+    array-based deque
+
+    array-based stack
+
+    array-based queue
+
+## gemm: ##
+    
+    gemm_4x4
+
+    gemm_8x8
+
+    gemm_ikj
+
+## Sorting Algorithm ##    
+
+    merge_sort
 
 
-To be continued...
+# To be continued... #
