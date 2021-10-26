@@ -23,5 +23,9 @@ including:
 
     merge_sort
 
+## String Matching Algorithm ##
+
+    Rabin-Karp    
+
 
 # To be continued... #
