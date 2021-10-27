@@ -22,6 +22,7 @@ including:
 ## Sorting Algorithm ##    
 
     merge_sort
+    quick_sort
 
 ## String Matching Algorithm ##
 
