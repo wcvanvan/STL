@@ -6,13 +6,14 @@
 void gemm_4x4(float *A, float *B, float *C, int M, int N, int K);
 void addDot_4x4(float *A, float *B, float *C, int M, int N, int K);
 /*
-pass matrices in the form of 1d array using reference
 M: rows of C, rows of A
 N: columns of C, columns of B
 K: columns of A, rows of B
 */
 void gemm_4x4(float *A, float *B, float *C, int M, int N, int K) {
   int bigBlockCountInRow = M / 16;
+  // dividing the whole matrix into pow(bigBlockCountInRow, 2)'s big blocks.
+  // Each big block contains 16 (4x4) small blocks of size 8x8
   for (int z = 0; z < pow(bigBlockCountInRow, 2); z++) {
     int newI = z / bigBlockCountInRow * 16;
     int newJ = z % bigBlockCountInRow * 16;

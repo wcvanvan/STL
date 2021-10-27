@@ -12,6 +12,8 @@ K: columns of A, rows of B
 */
 void gemm_8x8(float *A, float *B, float *C, int M, int N, int K) {
   int bigBlockCountInRow = M / 64;
+  // dividing the whole matrix into pow(bigBlockCountInRow, 2)'s big blocks.
+  // Each big block contains 64 (8x8) small blocks of size 8x8
   for (int z = 0; z < pow(bigBlockCountInRow, 2); z++) {
     int newI = z / bigBlockCountInRow * 64;
     int newJ = z % bigBlockCountInRow * 64;
