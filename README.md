@@ -1,5 +1,5 @@
 # Introduction #
-This repository contains some libraries written in C++
+This repository contains some algorithm and data structure written in C++
 
 including:
 
@@ -27,6 +27,10 @@ including:
 ## String Matching Algorithm ##
 
     Rabin-Karp    
+
+## Others ##
+    
+    Euclidean Algorithm
 
 
 # To be continued... #
