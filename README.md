@@ -7,6 +7,8 @@ including:
 
     array-based deque
 
+    linked-list-based deque
+
     array-based stack
 
     array-based queue
