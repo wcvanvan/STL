@@ -6,7 +6,7 @@ class Stack {
   int top;
 
  public:
-  int length;
+ int length;
   Stack(int _max_size);
   ~Stack();
   bool push(T element);
