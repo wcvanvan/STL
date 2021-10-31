@@ -6,12 +6,12 @@ class Stack {
   int top;
 
  public:
+  int length;
   Stack(int _max_size);
   ~Stack();
   bool push(T element);
   bool pop();
   T peek();
-  bool isEmpty();
   void clear();
 };
 
@@ -20,6 +20,7 @@ Stack<T>::Stack(int _max_size) {
   top = -1;
   max_size = _max_size;
   array = new T[max_size];
+  length = 0;
 }
 
 template <typename T>
@@ -33,6 +34,7 @@ bool Stack<T>::push(T element) {
     return false;
   } else {
     array[++top] = element;
+    length++;
     return true;
   }
 }
@@ -43,6 +45,7 @@ bool Stack<T>::pop() {
     return false;
   } else {
     top--;
+    length--;
     return true;
   }
 }
@@ -50,15 +53,6 @@ bool Stack<T>::pop() {
 template <typename T>
 T Stack<T>::peek() {
   return array[top];
-}
-
-template <typename T>
-bool Stack<T>::isEmpty() {
-  if (top == -1) {
-    return true;
-  } else {
-    return false;
-  }
 }
 
 template <typename T>

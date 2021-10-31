@@ -2,11 +2,11 @@ template <typename T>
 class Deque {
  private:
   int max_size;
-  int real_size;
   T *array;
   int front, rear;
 
  public:
+  int length;
   Deque(int max_size);
   ~Deque();
   bool enqueue_rear(T element);
@@ -15,17 +15,14 @@ class Deque {
   bool dequeue_rear();
   T peek_front();
   T peek_rear();
-  bool isEmpty();
-  bool isFull();
 };
 
 template <typename T>
 Deque<T>::Deque(int _max_size) {
   max_size = _max_size;
-  real_size = max_size + 1;
-  array = new T[real_size];
-  front = 0;
-  rear = 0;
+  array = new T[max_size];
+  front = rear = 0;
+  length = 0;
 }
 
 template <typename T>
@@ -35,9 +32,9 @@ Deque<T>::~Deque() {
 
 template <typename T>
 bool Deque<T>::enqueue_rear(T element) {
-  if (!isFull()) {
+  if (length != max_size) {
     array[rear++] = element;
-    rear %= real_size;
+    rear %= max_size;
     return true;
   } else {
     return false;
@@ -46,10 +43,10 @@ bool Deque<T>::enqueue_rear(T element) {
 
 template <typename T>
 bool Deque<T>::enqueue_front(T element) {
-  if (!isFull()) {
+  if (length != max_size) {
     front--;
     if (front < 0) {
-      front = real_size - 1;
+      front = max_size - 1;
     }
     array[front] = element;
     return true;
@@ -60,9 +57,9 @@ bool Deque<T>::enqueue_front(T element) {
 
 template <typename T>
 bool Deque<T>::dequeue_front() {
-  if (!isEmpty()) {
+  if (length) {
     front++;
-    front %= real_size;
+    front %= max_size;
     return true;
   } else {
     return false;
@@ -71,10 +68,10 @@ bool Deque<T>::dequeue_front() {
 
 template <typename T>
 bool Deque<T>::dequeue_rear() {
-  if (!isEmpty()) {
+  if (length) {
     rear--;
     if (rear < 0) {
-      rear = real_size - 1;
+      rear = max_size - 1;
     }
     return true;
   } else {
@@ -90,24 +87,8 @@ T Deque<T>::peek_front() {
 template <typename T>
 T Deque<T>::peek_rear() {
   if (!rear) {
-    return array[real_size - 1];
+    return array[max_size - 1];
   } else {
     return array[rear - 1];
   }
-}
-
-template <typename T>
-bool Deque<T>::isEmpty() {
-  if (front == rear) {
-    return true;
-  }
-  return false;
-}
-
-template <typename T>
-bool Deque<T>::isFull() {
-  if (((rear + 1) % real_size) == front) {
-    return true;
-  }
-  return false;
 }

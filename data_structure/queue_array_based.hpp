@@ -7,11 +7,12 @@ class Queue {
   int front, rear;
 
  public:
+  int length;
   Queue(int max_size);
   ~Queue();
   bool enqueue(T element);
   bool dequeue();
-  T peek();
+  T front();
   bool isEmpty();
   bool isFull();
 };
@@ -34,6 +35,7 @@ bool Queue<T>::enqueue(T element) {
   if (!isFull()) {
     array[rear++] = element;
     rear %= real_size;
+    length++;
     return true;
   } else {
     return false;
@@ -45,20 +47,20 @@ bool Queue<T>::dequeue() {
   if (!isEmpty()) {
     front++;
     front %= real_size;
-    return true;
+    length-- return true;
   } else {
     return false;
   }
 }
 
 template <typename T>
-T Queue<T>::peek() {
+T Queue<T>::front() {
   return array[front];
 }
 
 template <typename T>
 bool Queue<T>::isEmpty() {
-  if (front == rear) {
+  if (!length) {
     return true;
   }
   return false;
@@ -66,7 +68,7 @@ bool Queue<T>::isEmpty() {
 
 template <typename T>
 bool Queue<T>::isFull() {
-  if (((rear + 1) % real_size) == front) {
+  if (length == max_size) {
     return true;
   }
   return false;

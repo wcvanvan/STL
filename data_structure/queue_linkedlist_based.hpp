@@ -10,6 +10,7 @@ class Node {
 
 template <typename T>
 class Deque {
+ private:
   Node<T>*front, *rear;
 
  public:
@@ -20,19 +21,6 @@ class Deque {
   }
 
   ~Deque() { clear(); }
-
-  bool enqueue_front(T _value) {
-    Node<T>* newNode = new Node<T>(_value);
-    if (!length) {
-      front = rear = newNode;
-    } else {
-      newNode->next = front;
-      front->prev = newNode;
-      front = newNode;
-    }
-    length++;
-    return true;
-  }
 
   bool enqueue_rear(T _value) {
     Node<T>* newNode = new Node<T>(_value);
@@ -64,26 +52,7 @@ class Deque {
     return true;
   }
 
-  bool dequeue_rear() {
-    if (!length) {
-      return false;
-    }
-    if (length == 1) {
-      delete rear;
-      front = rear = nullptr;
-      length--;
-      return true;
-    }
-    rear = rear->prev;
-    delete rear->next;
-    rear->next = nullptr;
-    length--;
-    return true;
-  }
-
   Node<T>* peek_front() { return front; }
-
-  Node<T>* peek_rear() { return rear; }
 
   bool clear() {
     while (front != rear) {
