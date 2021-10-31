@@ -11,7 +11,11 @@ including:
 
     array-based stack
 
+    linked-list-based stack
+
     array-based queue
+
+    linked-list-based queue
 
 ## gemm: ##
     
