@@ -32,7 +32,8 @@ including:
 
 ## String Matching Algorithm ##
 
-    Rabin-Karp    
+    Rabin-Karp
+    finite-state automata for string matching    
 
 ## Others ##
     
