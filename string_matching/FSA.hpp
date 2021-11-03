@@ -1,12 +1,14 @@
-#include <string.h>
+#include <string>
 #define total_chars 256
 #define trans_func(i, j) (trans_func[(i) * (m) + (j)])
 
-void transition(int* trans_func, char* pattern, int m);
+using std::string;
 
-int FSA(char* pattern, char* text) {
-    int m = strlen(pattern);
-    int n = strlen(text);
+void transition(int* trans_func, string pattern, int m);
+
+int FSA(string pattern, string text) {
+    int m = pattern.length();
+    int n = text.length();
     int* trans_func = new int[total_chars * m];
     transition(trans_func, pattern, m);
     int q = 0;
@@ -19,7 +21,8 @@ int FSA(char* pattern, char* text) {
     return -1;
 }
 
-void transition(int* trans_func, char* pattern, int m) {
+void transition(int* trans_func, string pattern) {
+    int m = pattern.length();
     for (int i = 0; i < total_chars; i++) {
         if (i == pattern[0]) {
             trans_func(i, 0) = 1;
