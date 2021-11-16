@@ -2,15 +2,15 @@
 #include <stdlib.h>
 #define random(p) (rand() % (p))
 
-void quick_sort(int* array, int* supportArray, int L, int R) {
-	if (L == R)
+void quicksort(int* array, int* supportArray, int L, int R) {
+	if (L >= R)
 	{
 		return;
 	}
 	srand(time(0) + L + R);
 	int pivot = L + random(R - L);
 	int l = L, r = R;
-	for (int i = L; i < R; i++)
+	for (int i = L; i <= R; i++)
 	{
 		if (i == pivot)
 		{
@@ -21,20 +21,14 @@ void quick_sort(int* array, int* supportArray, int L, int R) {
 			supportArray[l++] = array[i];
 		}
 		else {
-			supportArray[--r] = array[i];
+			supportArray[r--] = array[i];
 		}
 	}
 	supportArray[l] = array[pivot];
-	for (int i = L; i < R; i++)
+	for (int i = L; i <= R; i++)
 	{
 		array[i] = supportArray[i];
 	}
-	quick_sort(array, supportArray, L, l);
-	if (L == l)
-	{
-		quick_sort(array, supportArray, l + 1, R);
-	}
-	else {
-		quick_sort(array, supportArray, l, R);
-	}
+	quicksort(array, supportArray, L, l - 1);
+	quicksort(array, supportArray, l + 1, R);
 }
