@@ -5,12 +5,12 @@ void find_next(string pattern, int* next);
 int KMP(string pattern, string text) {
   int m = pattern.length();
   int n = text.length();
-  int j = 0;
   int* next = new int[m];
   for (int i = 0; i < m; i++) {
     next[i] = 0;
   }
   find_next(pattern, next);
+  int j = 0;
   for (int i = 0; i < n; i++) {
     while (j > 0 && text[i] != pattern[j]) {
       j = next[j - 1];
