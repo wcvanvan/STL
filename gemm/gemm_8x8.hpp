@@ -1,4 +1,5 @@
 #include <cmath>
+#include <omp.h>
 #define A(i, j) A[(i)*K + (j)]
 #define B(i, j) B[(i)*N + (j)]
 #define C(i, j) C[(i)*N + (j)]

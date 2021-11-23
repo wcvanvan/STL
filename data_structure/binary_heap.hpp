@@ -64,15 +64,10 @@ void BinaryHeap::insert_queue(int key) {
 }
 
 void BinaryHeap::remove() {
-    for (Node *child: root->children) {
-        child->parent = nodes[size - 1];
-        nodes[size - 1]->children.push_back(child);
-    }
+    root->key = nodes[size-1]->key;
     nodes[size-1]->parent->children.pop_back();
-    
-    root->children.clear();
-    root = nodes[size - 1];
-    root->parent = nullptr;
+    delete nodes[size-1];
+    size--;
     Node *node = root;
     bool has_small_child = false;
     do {

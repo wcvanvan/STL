@@ -1,6 +1,5 @@
 void Merge(int* array, int l, int mid, int r, int* supportArray) {
 	int AFlag = l, BFlag = mid + 1;
-	int length = r - l + 1;
 	for (int i = l; i <= r; i++)
 	{
 		if (AFlag > mid) {
