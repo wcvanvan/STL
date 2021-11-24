@@ -7,8 +7,8 @@ class Queue {
   int front, rear;
 
  public:
-  int length;
-  Queue(int max_size);
+  int length = 0;
+  explicit Queue(int max_size);
   ~Queue();
   bool enqueue(T element);
   bool dequeue();

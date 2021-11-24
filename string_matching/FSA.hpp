@@ -4,25 +4,25 @@
 
 using std::string;
 
-void transition(int* trans_func, string pattern, int m);
+void transition(int* trans_func, string pattern);
 
-int FSA(string pattern, string text) {
-  int m = pattern.length();
-  int n = text.length();
+int FSA(const string& pattern, const string &text) {
+  size_t m = pattern.length();
+  size_t n = text.length();
   int* trans_func = new int[total_chars * m];
-  transition(trans_func, pattern, m);
+  transition(trans_func, pattern);
   int q = 0;
   for (int i = 0; i < n; i++) {
     q = trans_func(text[i], q);
     if (q == m) {
-      return i - m + 1;
+      return int(i - m + 1);
     }
   }
   return -1;
 }
 
 void transition(int* trans_func, string pattern) {
-  int m = pattern.length();
+  size_t m = pattern.length();
   for (int i = 0; i < total_chars; i++) {
     if (i == pattern[0]) {
       trans_func(i, 0) = 1;

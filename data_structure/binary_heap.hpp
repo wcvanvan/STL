@@ -28,7 +28,7 @@ public:
 
     void insert_queue(int key);
 
-    void remove();
+    void delete_top();
 
     void traversal_level() const;
 };
@@ -63,10 +63,10 @@ void BinaryHeap::insert_queue(int key) {
     }
 }
 
-void BinaryHeap::remove() {
-    root->key = nodes[size-1]->key;
-    nodes[size-1]->parent->children.pop_back();
-    delete nodes[size-1];
+void BinaryHeap::delete_top() {
+    root->key = nodes[size - 1]->key;
+    nodes[size - 1]->parent->children.pop_back();
+    delete nodes[size - 1];
     size--;
     Node *node = root;
     bool has_small_child = false;

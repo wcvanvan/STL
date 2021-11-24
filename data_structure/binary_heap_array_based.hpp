@@ -70,7 +70,7 @@ void BinaryHeap::delete_top() {
             smaller_child->key = tmp;
             index = index_child;
         }
-    } while (index < size/2);
+    } while (index < size / 2);
 }
 
 void BinaryHeap::traversal_level() const {
@@ -81,7 +81,7 @@ void BinaryHeap::traversal_level() const {
 }
 
 int main() {
-    int * array = new int[10] {2,4,3,5,2,1,2,7,4,3};
+    int *array = new int[10]{2, 4, 3, 5, 2, 1, 2, 7, 4, 3};
     BinaryHeap heap(array, 10);
     heap.traversal_level();
 }

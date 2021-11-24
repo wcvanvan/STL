@@ -51,9 +51,14 @@ void merge_sort(Node *array, int l, int r, Node *supportArray) {
 class Huffman {
 public:
     Node *root = nullptr;
+    std::vector<Node*> new_nodes;
     Huffman(Node *array, int length) { build(array, length); }
+    ~Huffman() {
+        for (Node *node : new_nodes) {
+            delete node;
+        }
+    }
     void build(Node *array, int length);
-    void traversal_level() const;
     void dfs(Node *sub_root) const;
 };
 
@@ -63,13 +68,9 @@ void Huffman::build(Node *array, int length) {
     delete[] support_array;
     std::queue<Node*> queue;
     int array_flag = 0;
-    while(array_flag != length || !queue.empty()) {
-        if ((length-array_flag + queue.size()) == 1) {
-            if (queue.size() == 1) {
-                root = queue.front();
-            } else {
-                root = &array[array_flag];
-            }
+    while(true) {
+        if (array_flag == length && queue.size() == 1) {
+            root = queue.front();
             break;
         }
         Node *node_a;
@@ -86,7 +87,7 @@ void Huffman::build(Node *array, int length) {
                 queue.pop();
             }
             else if (queue.size() == 1) {
-                if (queue.front()->frequency < array[array_flag+1].frequency) {
+                if (length - array_flag == 1 || queue.front()->frequency < array[array_flag+1].frequency) {
                     node_a = &array[array_flag];
                     node_b = queue.front();
                     array_flag += 1;
@@ -98,7 +99,7 @@ void Huffman::build(Node *array, int length) {
                 }
             } else {
                 if (array[array_flag].frequency < queue.front()->frequency) {
-                    if (queue.front()->frequency < array[array_flag+1].frequency) {
+                    if (length - array_flag == 1 || queue.front()->frequency < array[array_flag+1].frequency) {
                         node_a = &array[array_flag];
                         node_b = queue.front();
                         array_flag += 1;
@@ -122,24 +123,11 @@ void Huffman::build(Node *array, int length) {
             }
         }
         Node *new_node = new Node(node_a->frequency + node_b->frequency);
+        new_nodes.push_back(new_node);
         new_node->children.push_back(node_a);
         new_node->children.push_back(node_b);
         queue.push(new_node);
     }
-}
-
-void Huffman::traversal_level() const {
-    std::queue<Node *> q;
-    q.push(root);
-    while (!q.empty()) {
-        Node *temp = q.front();
-        q.pop();
-        std::cout << temp->frequency << " ";
-        for (auto &i: temp->children) {
-            q.push(i);
-        }
-    }
-    std::cout << std::endl;
 }
 
 void Huffman::dfs(Node *sub_root) const {
@@ -163,7 +151,6 @@ int main() {
     array[8].frequency = 10;
 
     Huffman huffman(array, 10);
-    huffman.traversal_level();
     huffman.dfs(huffman.root);
     for (int i = 0; i < 10; ++i) {
         std::cout << array[i].letter << " " << array[i].code << "\n";

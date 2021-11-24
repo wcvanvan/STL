@@ -1,6 +1,6 @@
-#include <time.h>
-#include <stdlib.h>
-#define random(p) (rand() % (p))
+#include <ctime>
+#include <cstdlib>
+#include <random>
 
 void quicksort(int* array, int* supportArray, int L, int R) {
 	if (L >= R)
@@ -8,6 +8,7 @@ void quicksort(int* array, int* supportArray, int L, int R) {
 		return;
 	}
 	srand(time(0) + L + R);
+
 	int pivot = L + random(R - L);
 	int l = L, r = R;
 	for (int i = L; i <= R; i++)
