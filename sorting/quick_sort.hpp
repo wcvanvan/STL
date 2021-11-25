@@ -2,14 +2,16 @@
 #include <cstdlib>
 #include <random>
 
+std::random_device rd;
+std::minstd_rand engine(rd());
+
 void quicksort(int* array, int* supportArray, int L, int R) {
 	if (L >= R)
 	{
 		return;
 	}
-	srand(time(0) + L + R);
-
-	int pivot = L + random(R - L);
+    std::uniform_int_distribution<int> distribution(L, R);
+	int pivot = distribution(engine);
 	int l = L, r = R;
 	for (int i = L; i <= R; i++)
 	{
