@@ -15,6 +15,7 @@ class BinaryHeap {
 public:
     std::vector<Node *> nodes;
     int size{0};
+    bool is_min_heap = true;
 
     BinaryHeap() = default;
 
@@ -37,11 +38,20 @@ void BinaryHeap::insert(int key) {
     nodes.push_back(new Node(key));
     size++;
     int index = size - 1;
-    while (index >= 1 && nodes[(index - 1) / 2]->key > nodes[index]->key) {
-        int tmp = nodes[(index - 1) / 2]->key;
-        nodes[(index - 1) / 2]->key = nodes[index]->key;
-        nodes[index]->key = tmp;
-        index = (index - 1) / 2;
+    if (is_min_heap) {
+        while (index >= 1 && nodes[(index - 1) / 2]->key > nodes[index]->key) {
+            int tmp = nodes[(index - 1) / 2]->key;
+            nodes[(index - 1) / 2]->key = nodes[index]->key;
+            nodes[index]->key = tmp;
+            index = (index - 1) / 2;
+        }
+    } else {
+        while (index >= 1 && nodes[(index - 1) / 2]->key < nodes[index]->key) {
+            int tmp = nodes[(index - 1) / 2]->key;
+            nodes[(index - 1) / 2]->key = nodes[index]->key;
+            nodes[index]->key = tmp;
+            index = (index - 1) / 2;
+        }
     }
 }
 
@@ -50,27 +60,51 @@ void BinaryHeap::delete_top() {
     nodes.pop_back();
     size--;
     int index = 0;
-    bool has_small_child = false;
-    do {
-        int index_child = index;
-        Node *smaller_child = nodes[index];
-        if (nodes[index * 2 + 1]->key < smaller_child->key) {
-            has_small_child = true;
-            smaller_child = nodes[index * 2 + 1];
-            index_child = index * 2 + 1;
-        }
-        if (index * 2 + 2 < size && nodes[index * 2 + 2]->key < smaller_child->key) {
-            has_small_child = true;
-            smaller_child = nodes[index * 2 + 2];
-            index_child = index * 2 + 2;
-        }
-        if (has_small_child) {
-            int tmp = nodes[index]->key;
-            nodes[index]->key = smaller_child->key;
-            smaller_child->key = tmp;
-            index = index_child;
-        }
-    } while (index < size / 2);
+    if (is_min_heap) {
+        bool has_small_child = false;
+        do {
+            int index_child = index;
+            Node *smaller_child = nodes[index];
+            if (nodes[index * 2 + 1]->key < smaller_child->key) {
+                has_small_child = true;
+                smaller_child = nodes[index * 2 + 1];
+                index_child = index * 2 + 1;
+            }
+            if (index * 2 + 2 < size && nodes[index * 2 + 2]->key < smaller_child->key) {
+                has_small_child = true;
+                smaller_child = nodes[index * 2 + 2];
+                index_child = index * 2 + 2;
+            }
+            if (has_small_child) {
+                int tmp = nodes[index]->key;
+                nodes[index]->key = smaller_child->key;
+                smaller_child->key = tmp;
+                index = index_child;
+            }
+        } while (index < size / 2);
+    } else {
+        bool has_big_child = false;
+        do {
+            int index_child = index;
+            Node *bigger_child = nodes[index];
+            if (nodes[index * 2 + 1]->key > bigger_child->key) {
+                has_big_child = true;
+                bigger_child = nodes[index * 2 + 1];
+                index_child = index * 2 + 1;
+            }
+            if (index * 2 + 2 < size && nodes[index * 2 + 2]->key > bigger_child->key) {
+                has_big_child = true;
+                bigger_child = nodes[index * 2 + 2];
+                index_child = index * 2 + 2;
+            }
+            if (has_big_child) {
+                int tmp = nodes[index]->key;
+                nodes[index]->key = bigger_child->key;
+                bigger_child->key = tmp;
+                index = index_child;
+            }
+        } while (index < size / 2);
+    }
 }
 
 void BinaryHeap::traversal_level() const {
