@@ -1,4 +1,4 @@
-void Merge(int *array, int l, int mid, int r, int *supportArray) {
+void merge(int *array, int l, int mid, int r, int *supportArray) {
     int AFlag = l, BFlag = mid + 1;
     for (int i = l; i <= r; i++) {
         if (AFlag > mid) {
@@ -24,12 +24,12 @@ void Merge(int *array, int l, int mid, int r, int *supportArray) {
     }
 }
 
-void MergeSort(int *array, int l, int r, int *supportArray) {
+void merge_sort(int *array, int l, int r, int *supportArray) {
     if (l >= r) {
         return;
     }
     int mid = (l + r) / 2;
-    MergeSort(array, l, mid, supportArray);
-    MergeSort(array, mid + 1, r, supportArray);
-    Merge(array, l, mid, r, supportArray);
+    merge_sort(array, l, mid, supportArray);
+    merge_sort(array, mid + 1, r, supportArray);
+    merge(array, l, mid, r, supportArray);
 }
