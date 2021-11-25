@@ -17,6 +17,10 @@ including:
 
     linked-list-based queue
 
+    tree
+
+    array-based binary heap
+
 ## gemm: ##
     
     gemm_4x4
@@ -25,19 +29,21 @@ including:
 
     gemm_ikj
 
-## Sorting Algorithm ##    
+## Sorting Algorithm ##
 
-    merge_sort
-    quick_sort
+    heap sort
+    merge sort
+    quick sort
 
 ## String Matching Algorithm ##
 
     Rabin-Karp
-    finite-state automata for string matching  
+    finite automata for string matching  
     KMP  
 
 ## Others ##
-    
+
+    Huffman coding
     Euclidean Algorithm
 
 
