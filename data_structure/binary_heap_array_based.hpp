@@ -76,6 +76,7 @@ void BinaryHeap::delete_top() {
                 index_child = index * 2 + 2;
             }
             if (has_small_child) {
+                has_small_child = false;
                 int tmp = nodes[index]->key;
                 nodes[index]->key = smaller_child->key;
                 smaller_child->key = tmp;
@@ -98,6 +99,7 @@ void BinaryHeap::delete_top() {
                 index_child = index * 2 + 2;
             }
             if (has_big_child) {
+                has_big_child = false;
                 int tmp = nodes[index]->key;
                 nodes[index]->key = bigger_child->key;
                 bigger_child->key = tmp;

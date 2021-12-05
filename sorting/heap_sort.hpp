@@ -58,6 +58,7 @@ int delete_top(int *support_array, int &size, bool is_min_heap) {
                 index_child = index * 2 + 2;
             }
             if (has_small_child) {
+                has_small_child = false;
                 int tmp = support_array[index];
                 support_array[index] = support_array[index_child];
                 support_array[index_child] = tmp;
@@ -65,7 +66,6 @@ int delete_top(int *support_array, int &size, bool is_min_heap) {
             } else {
                 break;
             }
-            has_small_child = false;
         } while (index < size / 2);
     } else {
         bool has_big_child = false;
