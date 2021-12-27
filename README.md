@@ -36,18 +36,23 @@ including:
 ## Sorting Algorithm ##
 
     heap sort
+
     merge sort
+
     quick sort
 
 ## String Matching Algorithm ##
 
     Rabin-Karp
+
     finite automata for string matching  
+
     KMP  
 
 ## Others ##
 
     Huffman coding
+
     Euclidean Algorithm
 
 
