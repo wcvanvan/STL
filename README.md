@@ -1,5 +1,5 @@
 # Introduction #
-This repository contains some algorithm and data structure written in C++
+Self-written basic STL, under development
 
 including:
 
@@ -19,7 +19,11 @@ including:
 
     tree
 
-    array-based binary heap
+    priority queue
+
+    graph
+
+
 
 ## gemm: ##
     
