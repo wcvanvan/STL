@@ -3,7 +3,6 @@
 #include <algorithm>
 #include "priority_queue.hpp"
 #include <stack>
-#include <queue>
 
 #define MAX_VALUE 1000000000
 
@@ -224,7 +223,7 @@ int Graph::strongly_connected_components() {
         number_scc++;
         //cout << number_scc << ": " << start_vertex_idx+1 << endl;
     }
-    long long *degrees = new long long[SCCs.size() * 2];
+    auto *degrees = new int[SCCs.size() * 2];
     //for (int vertex_idx = 0; vertex_idx < V; ++vertex_idx) {
     //    for (Pair *pair : adjacency_list[vertex_idx]) {
     //        for (int scc_idx = 0; scc_idx < SCCs.size(); ++scc_idx) {
@@ -260,11 +259,11 @@ void Graph::dfs(int vertex_idx, bool *visited, stack<int> *s, stack<int> *order,
 
 int main() {
     std::istream::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-    long long cities, roads;
+    int cities, roads;
     cin >> cities >> roads;
     Graph graph(cities, roads);
-    for (long long road = 0; road < roads; ++road) {
-        long long vertex_a_num, vertex_b_num;
+    for (int road = 0; road < roads; ++road) {
+        int vertex_a_num, vertex_b_num;
         cin >> vertex_a_num >> vertex_b_num;
         vertex_a_num--, vertex_b_num--;
         graph.add_edge(vertex_a_num, vertex_b_num, 0, true);
