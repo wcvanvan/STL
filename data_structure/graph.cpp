@@ -2,6 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include "priority_queue.hpp"
+#include <stack>
+#include <queue>
 
 #define MAX_VALUE 1000000000
 
@@ -26,11 +28,15 @@ public:
 
     ~Graph() = default;
 
-    void add_edge(int from, int to, int weight, bool is_directed) const;
+    void add_edge(int from, int to, int weight, bool is_directed = false) const;
 
     int shortest_path(int from, int to);
 
     int minimum_spanning_tree();
+
+    int strongly_connected_components();
+
+    void dfs(int vertex_idx, bool *visited, stack<int> *s = nullptr, stack<int> *order = nullptr, vector<int> *v = nullptr);
 };
 
 class Graph::Pair {
@@ -43,7 +49,7 @@ public:
         else { return false; }
     }
 
-    friend std::ostream& operator << (std::ostream& os, Graph::Pair& pair) {
+    friend std::ostream &operator<<(std::ostream &os, Graph::Pair &pair) {
         os << pair.weight;
         return os;
     }
@@ -61,7 +67,7 @@ public:
 
     Vertex() = default;
 
-    bool operator<(Graph::Vertex &v) {
+    bool operator<(Graph::Vertex &v) const {
         if (this->distance < v.distance) { return true; }
         else { return false; }
     }
@@ -122,24 +128,25 @@ int Graph::minimum_spanning_tree() {
     int total_length{};
     vertices = new Vertex[V];
     // find the shortest edge
-    int vertex_a{0}, vertex_b{1};
-    int weight = adjacency_list[0][1]->weight;
+    int vertex_a{0}, vertex_b{};
+    int weight = adjacency_list[0][0]->weight;
+    vertex_b = adjacency_list[0][0]->to;
+    Pair *shortest_edge{};
     for (int from_vertex = 0; from_vertex < V; ++from_vertex) {
-        for (int to_vertex = 0; to_vertex < adjacency_list[from_vertex].size(); to_vertex++) {
-            if (from_vertex == to_vertex) {
-                continue;
-            }
-            if (adjacency_list[from_vertex][to_vertex]->weight < weight) {
-                weight = adjacency_list[from_vertex][to_vertex]->weight;
+        for (Pair *pair: adjacency_list[from_vertex]) {
+            if (pair->weight < weight) {
+                weight = pair->weight;
                 vertex_a = from_vertex;
-                vertex_b = to_vertex;
+                vertex_b = pair->to;
+                shortest_edge = pair;
             }
         }
     }
-    vertices[vertex_b].best_extension = adjacency_list[vertex_a][vertex_b]->weight;
-    vertices[vertex_a].best_extension = vertices[vertex_b].best_extension;
-    total_length += vertices[vertex_b].best_extension;
+    vertices[vertex_b].best_extension = shortest_edge->weight;
+    vertices[vertex_a].best_extension = shortest_edge->weight;
+    total_length += shortest_edge->weight;
     vertices[vertex_b].parent_path = vertex_a;
+    vertices[vertex_a].parent_path = vertex_b;
     vector<int> S;
     S.push_back(vertex_a);
     S.push_back(vertex_b);
@@ -169,7 +176,7 @@ int Graph::minimum_spanning_tree() {
             priority_queue->delete_top();
         }
         int top_idx = priority_queue->top()->to;
-        //cout << top_idx << " " << priority_queue->top()->weight << endl;
+        cout << top_idx << " " << priority_queue->top()->weight << endl;
         total_length += priority_queue->top()->weight;
         priority_queue->delete_top();
         S.push_back(top_idx);
@@ -181,17 +188,86 @@ int Graph::minimum_spanning_tree() {
             priority_queue->insert(pair);
         }
     }
+    delete vertices;
+    delete priority_queue;
     return total_length;
 }
 
-int main() {
-    int vertices, edges;
-    cin >> vertices >> edges;
-    Graph graph(vertices, edges);
-    for (int i = 0; i < edges; ++i) {
-        int from, to, weight;
-        cin >> from >> to >> weight;
-        graph.add_edge(from, to, weight, false);
+/*
+ * return the number of SCC
+ */
+int Graph::strongly_connected_components() {
+    int number_scc{};
+    vertices = new Vertex[V];
+    bool *visited = new bool[V]{};
+    Graph graph_reverse(V, E);
+    for (int from_vertex_idx = 0; from_vertex_idx < V; ++from_vertex_idx) {
+        for (Pair *pair : adjacency_list[from_vertex_idx]) {
+            graph_reverse.add_edge(pair->to, from_vertex_idx, pair->weight, true);
+        }
     }
-    cout << graph.minimum_spanning_tree() << endl;
+    stack<int> s;
+    stack<int> order;
+    for (int vertex_idx = 0; vertex_idx < V; ++vertex_idx) {
+        if (visited[vertex_idx]) { continue; }
+        graph_reverse.dfs(vertex_idx, visited, &s, &order);
+    }
+    fill(visited, visited + V, 0);
+    vector<vector<int>> SCCs;
+    while (!order.empty()) {
+        int start_vertex_idx = order.top();
+        order.pop();
+        if (visited[start_vertex_idx]) { continue; }
+        vector<int> v;
+        SCCs.push_back(v);
+        dfs(start_vertex_idx, visited, nullptr, nullptr, &v);
+        number_scc++;
+        //cout << number_scc << ": " << start_vertex_idx+1 << endl;
+    }
+    long long *degrees = new long long[SCCs.size() * 2];
+    //for (int vertex_idx = 0; vertex_idx < V; ++vertex_idx) {
+    //    for (Pair *pair : adjacency_list[vertex_idx]) {
+    //        for (int scc_idx = 0; scc_idx < SCCs.size(); ++scc_idx) {
+    //            if (std::find(SCCs[scc_idx].begin(), SCCs[scc_idx].end(), vertex_idx) != SCCs[scc_idx].end() && std::find(SCCs[scc_idx].begin(), SCCs[scc_idx].end(), pair->to) != SCCs[scc_idx].end()) {
+    //                degrees[scc_idx*2 + 1]++;
+    //            }
+    //        }
+    //    }
+    //}
+    delete[] vertices;
+    delete[] visited;
+    delete[] degrees;
+    return number_scc;
+}
+
+void Graph::dfs(int vertex_idx, bool *visited, stack<int> *s, stack<int> *order, vector<int> *v) {
+    if (s != nullptr) {
+        s->push(vertex_idx);
+    }
+    if (v != nullptr) {
+        v->push_back(vertex_idx);
+    }
+    visited[vertex_idx] = true;
+    for (Pair *pair: adjacency_list[vertex_idx]) {
+        if (visited[pair->to]) { continue; }
+        dfs(pair->to, visited, s, order);
+    }
+    if (order != nullptr) {
+        order->push(s->top());
+        s->pop();
+    }
+}
+
+int main() {
+    std::istream::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+    long long cities, roads;
+    cin >> cities >> roads;
+    Graph graph(cities, roads);
+    for (long long road = 0; road < roads; ++road) {
+        long long vertex_a_num, vertex_b_num;
+        cin >> vertex_a_num >> vertex_b_num;
+        vertex_a_num--, vertex_b_num--;
+        graph.add_edge(vertex_a_num, vertex_b_num, 0, true);
+    }
+    cout << graph.strongly_connected_components() << endl;
 }
