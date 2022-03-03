@@ -123,21 +123,21 @@ void Graph::add_edge(int from, int to, int weight, bool is_directed) const {
     adjacency_list[from].push_back(new Pair(to, weight));
 }
 
-int Graph::minimum_spanning_tree() {
-    int total_length{};
+long long Graph::minimum_spanning_tree() {
+    long long total_length{};
     vertices = new Vertex[V];
     // find the shortest edge
-    int vertex_a{0}, vertex_b{};
-    int weight = adjacency_list[0][0]->weight;
+    long long vertex_a{0}, vertex_b{};
+    long long weight = adjacency_list[0][0]->weight;
     vertex_b = adjacency_list[0][0]->to;
-    Pair *shortest_edge{};
-    for (int from_vertex = 0; from_vertex < V; ++from_vertex) {
-        for (Pair *pair: adjacency_list[from_vertex]) {
-            if (pair->weight < weight) {
-                weight = pair->weight;
+    Edge *shortest_edge = adjacency_list[0][0];
+    for (long long from_vertex = 0; from_vertex < V; ++from_vertex) {
+        for (Edge *edge: adjacency_list[from_vertex]) {
+            if (edge->weight < weight) {
+                weight = edge->weight;
                 vertex_a = from_vertex;
-                vertex_b = pair->to;
-                shortest_edge = pair;
+                vertex_b = edge->to;
+                shortest_edge = edge;
             }
         }
     }
@@ -146,49 +146,47 @@ int Graph::minimum_spanning_tree() {
     total_length += shortest_edge->weight;
     vertices[vertex_b].parent_path = vertex_a;
     vertices[vertex_a].parent_path = vertex_b;
-    vector<int> S;
+    vector<long long> S(V);
+    bool *in_S = new bool[V]{};
     S.push_back(vertex_a);
     S.push_back(vertex_b);
-    auto *priority_queue = new PriorityQueue<Pair>;
-    for (auto &pair: adjacency_list[vertex_a]) {
-        if (vertices[pair->to].best_extension == MAX_VALUE) {
-            vertices[pair->to].best_extension = pair->weight;
-            priority_queue->insert(pair);
-            vertices[pair->to].parent_path = vertex_a;
-        } else if (pair->weight < vertices[pair->to].best_extension) {
-            vertices[pair->to].parent_path = vertex_a;
-            vertices[pair->to].best_extension = pair->weight;
+    in_S[vertex_a] = true, in_S[vertex_b] = true;
+    priority_queue<Edge *, vector<Edge *>, edge_cmp> pq;
+    for (auto &edge: adjacency_list[vertex_a]) {
+        if (edge->weight < vertices[edge->to].best_extension) {
+            vertices[edge->to].best_extension = edge->weight;
+            pq.push(edge);
+            vertices[edge->to].parent_path = vertex_a;
         }
     }
-    for (auto &pair: adjacency_list[vertex_b]) {
-        if (vertices[pair->to].best_extension == MAX_VALUE) {
-            vertices[pair->to].best_extension = pair->weight;
-            priority_queue->insert(pair);
-            vertices[pair->to].parent_path = vertex_b;
-        } else if (pair->weight < vertices[pair->to].best_extension) {
-            vertices[pair->to].parent_path = vertex_b;
-            vertices[pair->to].best_extension = pair->weight;
+    for (auto &edge: adjacency_list[vertex_b]) {
+        if (edge->weight < vertices[edge->to].best_extension) {
+            vertices[edge->to].best_extension = edge->weight;
+            pq.push(edge);
+            vertices[edge->to].parent_path = vertex_b;
         }
     }
-    for (int idx = 2; idx < V; ++idx) {
-        while (std::find(S.begin(), S.end(), priority_queue->top()->to) != S.end()) {
-            priority_queue->delete_top();
+    while (!pq.empty()) {
+        bool exist{}, empty{};
+        long long top_idx = pq.top()->to;
+        if (in_S[top_idx]) {
+            pq.pop();
+            continue;
         }
-        int top_idx = priority_queue->top()->to;
-        cout << top_idx << " " << priority_queue->top()->weight << endl;
-        total_length += priority_queue->top()->weight;
-        priority_queue->delete_top();
+        long long weight = pq.top()->weight;
+        pq.pop();
+//        cout << top_idx+1 << " " << priority_queue.front().weight << endl;
+        total_length += weight;
         S.push_back(top_idx);
-        for (auto &pair: adjacency_list[top_idx]) {
-            if (pair->weight < vertices[pair->to].best_extension) {
-                vertices[pair->to].best_extension = pair->weight;
-                vertices[pair->to].parent_path = top_idx;
+        in_S[top_idx] = true;
+        for (auto &edge: adjacency_list[top_idx]) {
+            if (edge->weight < vertices[edge->to].best_extension) {
+                vertices[edge->to].best_extension = edge->weight;
+                vertices[edge->to].parent_path = top_idx;
+                pq.push(edge);
             }
-            priority_queue->insert(pair);
         }
     }
-    delete vertices;
-    delete priority_queue;
     return total_length;
 }
 

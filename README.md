@@ -55,5 +55,7 @@ including:
 
     Euclidean Algorithm
 
+    Stable matching
+
 
 # To be continued... #
